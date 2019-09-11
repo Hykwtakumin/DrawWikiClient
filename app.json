@@ -26,6 +26,7 @@
     "ios": {
       "supportsTablet": true
     },
-    "description": ""
+    "description": "Client App for DrawWiki",
+    "githubUrl": "https://github.com/Hykwtakumin/DrawWikiClient"
   }
 }

@@ -5,12 +5,24 @@ import {NavigationButtons} from "./components/NavigationButtons";
 import {URLBar} from "./components/URLBar";
 // import { Constants, WebBrowser } from 'expo';
 import * as WebBrowser from 'expo-web-browser';
+import {Constants} from "expo/build/globals.web";
+import * as Google from 'expo-google-app-auth';
 
 //認証をうまいことする必要がある
 export default function App() {
 
     const [pageURL, setPageURL] = useState<string>("https://scrapbox.io/uipedia/");
+    const [redirectData, setRiderctData] = useState<any>(null);
+    const [accessToken, setAccessToken] = useState<string>("");
+    const [idToken, setIdToken] = useState<string>("");
+    const [refreshToken, setRefreshToken] = useState<string>("");
+    const [userName, setUserName] = useState<string>("");
+    const [userImage, setUserImage] = useState<string>("");
     const webView = useRef<WebView>(null);
+
+    const customHeader = {
+        Authorization: `Bearer `
+    };
 
     const handleBack = () => {
         webView.current.goBack();
@@ -33,21 +45,38 @@ export default function App() {
         handleReload();
     };
 
-    //DeepLinkとかいうのを使うらしい
     const handleAuth = async () => {
-        //const redirect = await Linking.getInitialURL("/");
-        const result = await WebBrowser.openAuthSessionAsync("https://scrapbox.io/login/google", "exp://");
-        if (result) {
-            alert(result)
-        } else {
-            alert("something went wrong!");
-        }
-    };
 
-    const handleLoadEnd = () => {
-        const loadedURL = webView.current.props.source[0] as string;
-        if (loadedURL != void 0) {
-            alert(loadedURL.toString());
+        try {
+            const result = await Google.logInAsync({
+                androidClientId: "",
+                iosClientId: "",
+                scopes: ['profile', 'email'],
+                androidStandaloneAppClientId: "",
+                behavior: 'web',
+                clientId: "",
+                iosStandaloneAppClientId: "",
+                redirectUrl: "",
+                webClientId: ""
+            });
+
+            if (result.type === 'success') {
+                //return result.accessToken;
+                console.log("success!");
+                console.dir(result);
+                setAccessToken(result.accessToken);
+                setIdToken(result.idToken);
+                setRefreshToken(result.refreshToken);
+                setUserName(result.user.name);
+                setUserImage(result.user.photoUrl);
+                alert(`Welcome! ${result.user.name}`);
+            } else {
+                //return { cancelled: true };
+                console.log(result);
+            }
+        } catch (e) {
+            //return { error: true };
+            console.log(e);
         }
     };
 
@@ -70,11 +99,15 @@ export default function App() {
             </View>
             <WebView
                 ref={webView}
-                source={{uri: pageURL}}
+                source={{
+                    uri: pageURL, headers: {
+                        "Authorization": `Bearer ${accessToken}`
+                    }
+                }}
                 style={styles.browser}
-
                 scrollEnabled={true}
             />
+
         </View>
     );
 }
@@ -88,7 +121,7 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start"
     },
     browser: {
-        flex: 1
+        flex: 1,
     },
     navBar: {
         flex: 0.08,

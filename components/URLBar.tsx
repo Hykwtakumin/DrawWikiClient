@@ -41,7 +41,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "rgba(255,255,255,0.7)",
         marginLeft: 5,
-        marginRight: 5
+        marginRight: 5,
+        borderRadius: 2
     },
     urlBar: {
         flex: 1,

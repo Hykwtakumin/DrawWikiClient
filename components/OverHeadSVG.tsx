@@ -1,40 +1,31 @@
 import React, {Component} from 'react';
-import {View, StyleSheet} from 'react-native';
-import {Constants, Svg} from 'expo';
+import {View, StyleSheet, Text} from 'react-native';
+import {Constants} from 'expo';
+//import * as Svg from 'react-native-svg'
+//import {Circle} from 'react-native-svg'
+//import SvgUri from "expo-svg-uri";
+
+export interface OverHeadSVGProps {
+    width: number,
+    height: number
+}
 
 //SVGを透過レイヤー上に表示するコンポーネント
 export const OverHeadSVG = () => {
     return (
         <View style={styles.container}>
-            <Svg height={100} width={100}>
-                <Svg.Circle
-                    cx={50}
-                    cy={50}
-                    r={45}
-                    strokeWidth={2.5}
-                    stroke="#e74c3c"
-                    fill="#f1c40f"
-                />
-                <Svg.Rect
-                    x={15}
-                    y={15}
-                    width={70}
-                    height={70}
-                    strokeWidth={2}
-                    stroke="#9b59b6"
-                    fill="#3498db"
-                />
-            </Svg>
+            <Text>This is OverLay Text</Text>
         </View>
     );
 };
 
+//"http://thenewcode.com/assets/images/thumbnails/homer-simpson.svg"
+//"https://s3.us-west-1.amazonaws.com/hyper-illust-creator/hyperillust_2019-06-06-08-33-35_.svg"
+
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingTop: Constants.statusBarHeight,
-        backgroundColor: '#ecf0f1',
+        position: "absolute",
+        zIndex: 10,
+        backgroundColor: 'rgba(255,255,255,0)',
     },
 });
